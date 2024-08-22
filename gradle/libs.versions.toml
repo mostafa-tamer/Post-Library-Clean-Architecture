@@ -14,6 +14,10 @@ composeBom = "2024.04.01"
 composeNavigation = "2.8.0-alpha08"
 roomVersion = "2.6.1"
 serialization = "1.6.3"
+coreKtxVersion = "1.6.1"
+junitKtx = "1.2.1"
+runner = "1.6.2"
+uiTestJunit4Android = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,7 +45,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
-
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
 
 
 [plugins]

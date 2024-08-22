@@ -13,7 +13,7 @@ fun ErrorState(viewModel: PreSaveable) {
         Text(text = "Error Loading Data")
         Button(
             onClick = {
-                viewModel.loadPreSavedData()
+                viewModel.getPreSavedData()
             }
         ) {
             Text(text = "Load Pre-Saved Data")

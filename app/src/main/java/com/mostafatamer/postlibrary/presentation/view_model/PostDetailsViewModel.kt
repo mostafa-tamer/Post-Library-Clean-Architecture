@@ -40,9 +40,20 @@ class PostDetailsViewModel @Inject constructor(
         this.postId = postId
     }
 
-    fun loadComments() {
+    private fun loadComments() {
         viewModelScope.launch {
             _comments.value = postUseCase.getComments(postId)
+        }
+    }
+
+    fun loadCommentsConsideringNetwork() {
+        if (_comments.value is DataState.Success<CommentsList>) {
+            val comments = (_comments.value as DataState.Success).data
+            if (comments.isEmpty()) {
+                loadComments()
+            }
+        } else {
+            loadComments()
         }
     }
 
@@ -56,7 +67,7 @@ class PostDetailsViewModel @Inject constructor(
         }
     }
 
-    override fun loadPreSavedData() {
+    override fun getPreSavedData() {
         viewModelScope.launch {
             _comments.value = postUseCase.getSavedComments(postId)
         }

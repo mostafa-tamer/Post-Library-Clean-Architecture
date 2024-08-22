@@ -1,5 +1,7 @@
 package com.mostafatamer.postlibrary.presentation.screens.navigatoin
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -7,18 +9,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.mostafatamer.postlibrary.presentation.screens.PostDetailsScreen
-import com.mostafatamer.postlibrary.presentation.screens.PostScreen
 import com.mostafatamer.postlibrary.presentation.view_model.PostDetailsViewModel
-import com.mostafatamer.postlibrary.presentation.view_model.PostViewModel
 import kotlinx.serialization.Serializable
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun MainNavigation(mainNavController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = PostScreen) {
-        composable<PostScreen> {
-            val viewModel = hiltViewModel<PostViewModel>()
-            PostScreen(navController, viewModel)
+    NavHost(
+        navController = mainNavController,
+        startDestination = HomeDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
+    ) {
+        composable<HomeDestination> {
+            HomeNavigation(mainNavController)
         }
 
         composable<PostDetailsScreen> {
@@ -27,13 +33,13 @@ fun NavGraph(navController: NavHostController) {
             val viewModel = hiltViewModel<PostDetailsViewModel>()
             viewModel.init(arguments.postId)
 
-            PostDetailsScreen(navController, viewModel)
+            PostDetailsScreen(mainNavController, viewModel)
         }
     }
 }
 
 @Serializable
-object PostScreen
+object HomeDestination
 
 @Serializable
 data class PostDetailsScreen(val postId: Int)

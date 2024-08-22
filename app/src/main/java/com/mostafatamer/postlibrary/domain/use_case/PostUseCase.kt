@@ -1,6 +1,5 @@
 package com.mostafatamer.postlibrary.domain.use_case
 
-import com.mostafatamer.postlibrary.data.local.entity.PostEntity
 import com.mostafatamer.postlibrary.data.local.repositoty.LocalPostRepository
 import com.mostafatamer.postlibrary.data.remote.repository.RemotePostRepository
 import com.mostafatamer.postlibrary.domain.model.CommentsList
@@ -64,4 +63,6 @@ class PostUseCase @Inject constructor(
             throw IllegalStateException("Post not found")
         }
     }
+
+    suspend fun getFavoritePosts(): DataState<PostList> = localPostRepository.getFavoritePosts()
 }

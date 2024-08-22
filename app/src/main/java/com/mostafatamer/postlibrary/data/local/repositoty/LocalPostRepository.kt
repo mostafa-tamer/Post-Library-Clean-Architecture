@@ -30,7 +30,6 @@ class LocalPostRepository(
         return if (comments.isNotEmpty()) DataState.Success(comments) else DataState.Empty
     }
 
-
     suspend fun savePosts(postList: PostList) {
         val posts = postList.map { it.toPostEntity() }
         postDao.upsert(posts)
@@ -56,5 +55,12 @@ class LocalPostRepository(
     suspend fun getPostById(postId: Int): DataState<Post> {
         val postEntity = postDao.getPostById(postId)
         return if (postEntity != null) DataState.Success(postEntity.toPost()) else DataState.Empty
+    }
+
+    suspend fun getFavoritePosts(): DataState<PostList> {
+        val postsEntity = postDao.getAllFavoritePosts()
+        val posts = postsEntity.map { it.toPost() }
+
+        return if (posts.isNotEmpty()) DataState.Success(posts) else DataState.Empty
     }
 }

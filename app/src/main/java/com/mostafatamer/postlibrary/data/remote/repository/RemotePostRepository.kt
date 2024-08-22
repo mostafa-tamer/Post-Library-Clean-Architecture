@@ -14,7 +14,7 @@ class RemotePostRepository(private val postApiService: PostApiService) {
             val posts = body?.map { it.toPost() }
             if (!posts.isNullOrEmpty()) DataState.Success(posts) else DataState.Empty
         } else {
-            DataState.Error(Throwable("HTTP error code: ${result.code()}"))
+            DataState.Error(Throwable(DataState.Error.unSuccessfulResponseErrorMessage(result.code())))
         }
     } catch (e: Exception) {
         DataState.Error(e)
@@ -29,7 +29,7 @@ class RemotePostRepository(private val postApiService: PostApiService) {
 
             if (!comments.isNullOrEmpty()) DataState.Success(comments) else DataState.Empty
         } else {
-            DataState.Error(Throwable("HTTP error code: ${result.code()}"))
+            DataState.Error(Throwable(DataState.Error.unSuccessfulResponseErrorMessage(result.code())))
         }
     } catch (e: Exception) {
         DataState.Error(e)

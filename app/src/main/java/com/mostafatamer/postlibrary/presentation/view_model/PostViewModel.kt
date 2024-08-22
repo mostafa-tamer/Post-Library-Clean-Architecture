@@ -21,13 +21,24 @@ class PostViewModel @Inject constructor(
     private val _posts = MutableStateFlow<DataState<PostList>>(DataState.Loading)
     val posts: StateFlow<DataState<PostList>> get() = _posts
 
-    fun loadPosts() {
+    private fun loadPosts() {
         viewModelScope.launch {
             _posts.value = postUseCase.getPosts()
         }
     }
 
-    override fun loadPreSavedData() {
+    fun loadPostsConsideringNetwork() {
+        if (_posts.value is DataState.Success<PostList>) {
+            val posts = (_posts.value as DataState.Success).data
+            if (posts.isEmpty()) {
+                loadPosts()
+            }
+        } else {
+            loadPosts()
+        }
+    }
+
+    override fun getPreSavedData() {
         viewModelScope.launch {
             _posts.value = postUseCase.getSavedPosts()
         }

@@ -25,11 +25,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.mostafatamer.postlibrary.MainActivity
 import com.mostafatamer.postlibrary.R
 import com.mostafatamer.postlibrary.domain.model.Comment
 import com.mostafatamer.postlibrary.domain.model.CommentsList
@@ -44,16 +46,19 @@ import com.mostafatamer.postlibrary.ui.theme.Favorite
 @Composable
 fun PostDetailsScreen(navController: NavHostController, viewModel: PostDetailsViewModel) {
 
-    LaunchedEffect(viewModel.postId) {
+    val mainActivity = LocalContext.current as MainActivity
+
+    LaunchedEffect(viewModel.postId, mainActivity.isConnected) {
+        viewModel.loadCommentsConsideringNetwork()
+
         viewModel.getPost()
         viewModel.checkIfFavoritePost()
-        viewModel.loadComments()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = "Post Details",
+                title = "Post ${viewModel.postId} Details",
                 navigationIcon = {
                     IconButton(
                         onClick = { navController.navigateUp() }
@@ -92,6 +97,7 @@ fun PostDetailsScreen(navController: NavHostController, viewModel: PostDetailsVi
         }
     }
 }
+
 
 @Composable
 private fun Header(viewModel: PostDetailsViewModel) {
