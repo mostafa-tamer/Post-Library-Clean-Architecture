@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -21,7 +22,7 @@ import com.mostafatamer.postlibrary.presentation.view_model.PostViewModel
 import kotlinx.serialization.Serializable
 
 @Composable
-fun HomeNavigation(mainNavController: NavHostController) {
+fun HomeNavigation(mainNavController: NavHostController, isConnected: State<Boolean?>) {
     val nestedNavController = rememberNavController()
 
     Scaffold(
@@ -39,12 +40,12 @@ fun HomeNavigation(mainNavController: NavHostController) {
             ) {
                 composable<PostDestination> {
                     val viewModel = hiltViewModel<PostViewModel>()
-                    PostScreen(mainNavController, viewModel)
+                    PostScreen(mainNavController, viewModel, isConnected)
                 }
 
                 composable<FavoritePostsDestination> {
                     val viewModel = hiltViewModel<FavoritePostViewModel>()
-                    FavoritePostsScreen(viewModel)
+                    FavoritePostsScreen(viewModel, isConnected)
                 }
             }
         }

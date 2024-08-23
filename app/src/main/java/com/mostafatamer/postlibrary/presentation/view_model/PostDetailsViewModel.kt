@@ -1,14 +1,12 @@
 package com.mostafatamer.postlibrary.presentation.view_model
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafatamer.postlibrary.domain.model.CommentsList
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.state.DataState
 import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
+import com.mostafatamer.postlibrary.loadDataCondition
 import com.mostafatamer.postlibrary.presentation.view_model.abstraction.PreSaveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +26,8 @@ class PostDetailsViewModel @Inject constructor(
     private var _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> get() = _isFavorite
 
-    var post by mutableStateOf<Post?>(null)
-        private set
+    private var _post = MutableStateFlow<DataState<Post>>(DataState.Loading)
+    val post get() = _post
 
     var postId: Int = -1
 
@@ -40,29 +38,39 @@ class PostDetailsViewModel @Inject constructor(
         this.postId = postId
     }
 
-    private fun loadComments() {
+    fun loadComments() {
         viewModelScope.launch {
-            _comments.value = postUseCase.getComments(postId)
-        }
-    }
-
-    fun loadCommentsConsideringNetwork() {
-        if (_comments.value is DataState.Success<CommentsList>) {
-            val comments = (_comments.value as DataState.Success).data
-            if (comments.isEmpty()) {
-                loadComments()
-            }
-        } else {
-            loadComments()
+            val result = postUseCase.getComments(postId)
+            loadDataCondition(result, _comments)
         }
     }
 
     fun checkIfFavoritePost() {
         viewModelScope.launch {
-            val isFavoriteFlow = postUseCase.isFavoritePost(postId)
+            handleOnPostIsRetrieved(
+                onError = { _isFavorite.value = false }
+            ) { post ->
+                val isFavoriteState = postUseCase.isFavoritePost(post)
 
-            isFavoriteFlow.collect { isFavorite ->
-                _isFavorite.value = isFavorite
+                if (isFavoriteState is DataState.Success) {
+                    _isFavorite.value = isFavoriteState.data
+                } else {
+                    _isFavorite.value = false
+                }
+            }
+        }
+    }
+
+    private suspend fun handleOnPostIsRetrieved(
+        onError: () -> Unit = {},
+        onRetrieved: suspend (Post) -> Unit,
+    ) {
+        post.collect { postDataState ->
+            if (postDataState is DataState.Success) {
+                val post = postDataState.data
+                onRetrieved(post)
+            } else {
+                onError()
             }
         }
     }
@@ -75,13 +83,21 @@ class PostDetailsViewModel @Inject constructor(
 
     private fun addPostToFavorite() {
         viewModelScope.launch {
-            postUseCase.addToFavoritePost(postId)
+            handleOnPostIsRetrieved {
+                postUseCase.addToFavoritePost(it)
+                _isFavorite.value = true
+            }
         }
     }
 
     private fun removePostFromFavorite() {
         viewModelScope.launch {
-            postUseCase.removeFromFavoritePost(postId)
+            handleOnPostIsRetrieved {
+                val result = postUseCase.removeFromFavoritePost(it)
+                if (result is DataState.Success) {
+                    _isFavorite.value = false
+                }
+            }
         }
     }
 
@@ -95,8 +111,8 @@ class PostDetailsViewModel @Inject constructor(
 
     fun getPost() {
         viewModelScope.launch {
-            val postState = postUseCase.getPostById(postId)
-            post = postState.data
+            _post.value = postUseCase.getPostById(postId)
         }
     }
+
 }

@@ -3,17 +3,21 @@ package com.mostafatamer.postlibrary.presentation.screens.navigatoin
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.mostafatamer.postlibrary.MainActivityViewModel
 import com.mostafatamer.postlibrary.presentation.screens.PostDetailsScreen
 import com.mostafatamer.postlibrary.presentation.view_model.PostDetailsViewModel
 import kotlinx.serialization.Serializable
 
 @Composable
-fun MainNavigation(mainNavController: NavHostController) {
+fun MainNavigation(mainNavController: NavHostController, activityViewModel: MainActivityViewModel) {
+
+    val isConnected = activityViewModel.isConnected.collectAsState()
 
     NavHost(
         navController = mainNavController,
@@ -24,7 +28,7 @@ fun MainNavigation(mainNavController: NavHostController) {
         popExitTransition = { ExitTransition.None }
     ) {
         composable<HomeDestination> {
-            HomeNavigation(mainNavController)
+            HomeNavigation(mainNavController, isConnected)
         }
 
         composable<PostDetailsScreen> {
@@ -33,7 +37,7 @@ fun MainNavigation(mainNavController: NavHostController) {
             val viewModel = hiltViewModel<PostDetailsViewModel>()
             viewModel.init(arguments.postId)
 
-            PostDetailsScreen(mainNavController, viewModel)
+            PostDetailsScreen(mainNavController, viewModel, isConnected)
         }
     }
 }

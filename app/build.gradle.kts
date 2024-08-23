@@ -65,10 +65,13 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.runner)
-//    implementation(libs.androidx.ui.test.junit4.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //swipe refresh
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.28.0")
+
 
     //retrofit
     implementation(libs.retrofit)
@@ -94,6 +97,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Testing
+    implementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     testImplementation("io.mockk:mockk:1.13.2")

@@ -10,11 +10,11 @@ import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalPostRepository(
+class LocalPostRepository @Inject constructor(
     private val postDao: PostDao,
     private val commentDao: CommentDao,
-    private val favoriteDao: FavoritePostDao,
 ) {
     suspend fun getPosts(): DataState<PostList> {
         val postsEntity = postDao.getAllPosts()
@@ -40,27 +40,8 @@ class LocalPostRepository(
         commentDao.upsert(commentEntities)
     }
 
-    fun isFavoritePost(postId: Int): Flow<Boolean> {
-        return favoriteDao.isFavorite(postId)
-    }
-
-    suspend fun addToFavoritePost(postId: Int) {
-        favoriteDao.addToFavorites(FavoritePostEntity(postId))
-    }
-
-    suspend fun removeFromFavoritePost(postId: Int) {
-        favoriteDao.removeFromFavorites(FavoritePostEntity(postId))
-    }
-
     suspend fun getPostById(postId: Int): DataState<Post> {
         val postEntity = postDao.getPostById(postId)
         return if (postEntity != null) DataState.Success(postEntity.toPost()) else DataState.Empty
-    }
-
-    suspend fun getFavoritePosts(): DataState<PostList> {
-        val postsEntity = postDao.getAllFavoritePosts()
-        val posts = postsEntity.map { it.toPost() }
-
-        return if (posts.isNotEmpty()) DataState.Success(posts) else DataState.Empty
     }
 }

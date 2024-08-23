@@ -42,7 +42,7 @@ class PostApiServiceTest {
 
     @Test
     fun mock_test_on_get_posts() = runTest {
-        val jsonResponse = jsonConverter.toJson(com.mostafatamer.postlibrary.PostsResponse)
+        val jsonResponse = jsonConverter.toJson(PostsResponse)
 
         val mockResponse = MockResponse()
             .setResponseCode(200)

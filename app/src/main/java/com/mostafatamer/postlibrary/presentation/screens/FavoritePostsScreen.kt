@@ -8,16 +8,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.mostafatamer.postlibrary.MainActivity
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.state.DataState
 import com.mostafatamer.postlibrary.presentation.components.CenterContentInLazyItem
@@ -26,21 +34,32 @@ import com.mostafatamer.postlibrary.presentation.shared_components.PostCardConte
 import com.mostafatamer.postlibrary.presentation.view_model.FavoritePostViewModel
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FavoritePostsScreen(viewModel: FavoritePostViewModel) {
+fun FavoritePostsScreen(viewModel: FavoritePostViewModel, isConnected: State<Boolean?>) {
 
-    LaunchedEffect(Unit) {
-        viewModel.getFavoritePosts()
+
+    LaunchedEffect(isConnected.value) {
+        viewModel.loadFavoritePosts()
     }
 
     Scaffold(
         topBar = { TopAppBar(title = "Favorite Posts") },
     ) {
+        val pullRefreshState =
+            rememberPullRefreshState(
+                viewModel.isRefreshing, {
+                    viewModel.isRefreshing = true
+                    viewModel.loadFavoritePosts()
+                }
+            )
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = it.calculateTopPadding())
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp)
+                .pullRefresh(pullRefreshState),
         ) {
             val favoritePosts by viewModel.favoritePosts.collectAsState()
 
@@ -75,6 +94,12 @@ fun FavoritePostsScreen(viewModel: FavoritePostViewModel) {
                     }
                 }
             }
+
+            PullRefreshIndicator(
+                viewModel.isRefreshing,
+                pullRefreshState,
+                Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }

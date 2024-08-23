@@ -8,6 +8,10 @@ sealed class DataState<out T> {
             fun unSuccessfulResponseErrorMessage(statusCode: Int): String {
                 return "HTTP error code: $statusCode"
             }
+
+            fun noInternetErrorMessage(): String {
+                return "No internet connection"
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -44,12 +45,14 @@ import com.mostafatamer.postlibrary.ui.theme.Favorite
 
 
 @Composable
-fun PostDetailsScreen(navController: NavHostController, viewModel: PostDetailsViewModel) {
+fun PostDetailsScreen(
+    navController: NavHostController,
+    viewModel: PostDetailsViewModel,
+    isConnected: State<Boolean?>
+) {
 
-    val mainActivity = LocalContext.current as MainActivity
-
-    LaunchedEffect(viewModel.postId, mainActivity.isConnected) {
-        viewModel.loadCommentsConsideringNetwork()
+    LaunchedEffect(viewModel.postId, isConnected.value) {
+        viewModel.loadComments()
 
         viewModel.getPost()
         viewModel.checkIfFavoritePost()
@@ -116,8 +119,10 @@ private fun Header(viewModel: PostDetailsViewModel) {
 @Composable
 private fun Post(viewModel: PostDetailsViewModel) {
     Column {
-        AnimatedVisibility(visible = viewModel.post != null) {
-            val post = viewModel.post!!
+        val postState by viewModel.post.collectAsState()
+        AnimatedVisibility(visible = postState is DataState.Success) {
+            val post = (postState as DataState.Success).data
+
             Column {
                 Text(
                     text = post.title,

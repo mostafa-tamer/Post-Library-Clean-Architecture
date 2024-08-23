@@ -1,12 +1,24 @@
 package com.mostafatamer.postlibrary.data.remote.repository
 
+import com.google.gson.Gson
+import com.mostafatamer.postlibrary.data.remote.dto.PostDto
 import com.mostafatamer.postlibrary.data.remote.service.PostApiService
 import com.mostafatamer.postlibrary.domain.model.CommentsList
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.net.InetSocketAddress
+import java.net.Socket
+import javax.inject.Inject
 
-class RemotePostRepository(private val postApiService: PostApiService) {
-    suspend fun getPosts(): DataState<PostList> = try {
+class RemotePostRepository @Inject constructor(private val postApiService: PostApiService) {
+
+   suspend fun getPosts(): DataState<PostList> = try {
         val result = postApiService.getPosts()
 
         if (result.isSuccessful) {

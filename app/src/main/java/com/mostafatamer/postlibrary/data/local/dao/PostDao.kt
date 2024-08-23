@@ -22,14 +22,6 @@ interface PostDao {
     @Query("SELECT * FROM posts")
     suspend fun getAllPosts(): List<PostEntity>
 
-    @Query(
-        """
-        SELECT posts.* FROM posts 
-        INNER JOIN favorite_posts ON posts.id = favorite_posts.postId
-    """
-    )
-    suspend fun getAllFavoritePosts(): List<PostEntity>
-
     @Query("DELETE FROM posts WHERE id = :id")
     suspend fun deletePostById(id: Int)
 

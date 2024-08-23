@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,12 +33,13 @@ import com.mostafatamer.postlibrary.presentation.shared_components.PostCardConte
 import com.mostafatamer.postlibrary.presentation.view_model.PostViewModel
 
 @Composable
-fun PostScreen(navHostController: NavHostController, viewModel: PostViewModel) {
-
-    val mainActivity = LocalContext.current as MainActivity
-
-    LaunchedEffect(mainActivity.isConnected) {
-        viewModel.loadPostsConsideringNetwork()
+fun PostScreen(
+    navHostController: NavHostController,
+    viewModel: PostViewModel,
+    isConnected: State<Boolean?>
+) {
+    LaunchedEffect(isConnected.value) {
+        viewModel.loadPosts()
     }
 
     Scaffold(
