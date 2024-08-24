@@ -1,3 +1,6 @@
+
+<img src="[https://example.com/my-image.png](https://github.com/user-attachments/assets/c44e6927-dbb6-4ab3-b7e3-b9b35bda987f)" alt="My Image Title" width="300" height="200" />
+
 ![User Flow Chart](https://github.com/user-attachments/assets/c44e6927-dbb6-4ab3-b7e3-b9b35bda987f)
 ![Use Case Diagram](https://github.com/user-attachments/assets/613c03d1-9e3a-40c7-a161-acfdf93f9ecd)
 ![Database Erd](https://github.com/user-attachments/assets/c50a573a-e0e7-4076-a622-a297a9ef7954)
