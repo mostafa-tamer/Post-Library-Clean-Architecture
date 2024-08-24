@@ -1,4 +1,5 @@
- *User Flow Chart*
+<img src="URL_to_your_image" alt="Flow Chart" width="800"/>
+
 ![User Flow Chart](https://github.com/user-attachments/assets/c44e6927-dbb6-4ab3-b7e3-b9b35bda987f)
  *User Flow Chart*
 ![Use Case Diagram](https://github.com/user-attachments/assets/613c03d1-9e3a-40c7-a161-acfdf93f9ecd)
