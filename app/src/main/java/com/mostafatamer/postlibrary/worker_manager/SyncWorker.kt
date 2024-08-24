@@ -7,7 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.mostafatamer.postlibrary.domain.model.SYNC_WORKER_ERROR
 import com.mostafatamer.postlibrary.domain.state.DataState
-import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
+import com.mostafatamer.postlibrary.domain.use_case.MockServerUseCase
 import com.mostafatamer.postlibrary.pushNotification
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -16,13 +16,13 @@ import dagger.assisted.AssistedInject
 class SyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val workerParams: WorkerParameters,
-    @Assisted private val postUseCase: PostUseCase,
+    @Assisted private val mockServerUseCase: MockServerUseCase
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
             context.pushNotification("Syncing Data", "Syncing favorite posts...")
-            val result = postUseCase.syncFavoritePosts()
+            val result = mockServerUseCase.syncFavoritePosts()
 
             if (result is DataState.Error) throw result.exception
 

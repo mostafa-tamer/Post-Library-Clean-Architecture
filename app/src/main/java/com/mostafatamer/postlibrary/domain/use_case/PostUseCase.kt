@@ -1,22 +1,16 @@
 package com.mostafatamer.postlibrary.domain.use_case
 
-import com.mostafatamer.postlibrary.data.local.entity.FavoritePostToSyncEntity
-import com.mostafatamer.postlibrary.data.local.repositoty.LocalFavoritePostToSyncRepository
 import com.mostafatamer.postlibrary.data.local.repositoty.LocalPostRepository
-import com.mostafatamer.postlibrary.data.remote.repository.RemoteMockFavoritePostRepository
 import com.mostafatamer.postlibrary.data.remote.repository.RemotePostRepository
 import com.mostafatamer.postlibrary.domain.model.CommentsList
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PostUseCase @Inject constructor(
     private val remotePostRepository: RemotePostRepository,
     private val localPostRepository: LocalPostRepository,
-    private val localFavoritePostToSyncRepository: LocalFavoritePostToSyncRepository,
-    private val remoteMockFavoritePostRepository: RemoteMockFavoritePostRepository,
 ) {
     suspend fun getPosts(): DataState<PostList> {
         val posts = remotePostRepository.getPosts()
@@ -47,26 +41,6 @@ class PostUseCase @Inject constructor(
         }
     }
 
-    suspend fun isFavoritePost(post: Post): DataState<Boolean> {
-        return remoteMockFavoritePostRepository.isFavoritePost(post)
-    }
-
-    suspend fun addToFavoritePost(post: Post) {
-        val result = remoteMockFavoritePostRepository.savePostToFavorites(post)
-
-        if (result is DataState.Error) {
-            localFavoritePostToSyncRepository.insert(
-                FavoritePostToSyncEntity(post.id)
-            )
-        }
-    }
-
-    suspend fun removeFromFavoritePost(post: Post): DataState<Post> {
-        val result = remoteMockFavoritePostRepository.removePostFromFavorites(post)
-
-        return result
-    }
-
     suspend fun getPostById(postId: Int): DataState.Success<Post> {
         val postState = localPostRepository.getPostById(postId)
         return if (postState is DataState.Success) {
@@ -74,23 +48,5 @@ class PostUseCase @Inject constructor(
         } else {
             throw IllegalStateException("Post not found")
         }
-    }
-
-    suspend fun loadFavoritePosts(): DataState<PostList> =
-        remoteMockFavoritePostRepository.loadFavoritePosts()
-
-    suspend fun syncFavoritePosts(): DataState<PostList> {
-        val favoritePostsToBeSynced = localFavoritePostToSyncRepository.getAll()
-            .first()
-            .map { it.toPost() }
-
-        val responseState =
-            remoteMockFavoritePostRepository.savePostsToFavorites(favoritePostsToBeSynced)
-
-        if (responseState is DataState.Success) {
-            localFavoritePostToSyncRepository.deleteAll()
-        }
-
-        return responseState
     }
 }

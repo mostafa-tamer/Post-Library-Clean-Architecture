@@ -7,7 +7,7 @@ import android.net.NetworkRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafatamer.postlibrary.data.remote.hasInternetAccess
-import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
+import com.mostafatamer.postlibrary.domain.use_case.MockServerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val connectivityManager: ConnectivityManager,
-    private val postUseCase: PostUseCase,
+    private val mockServerUseCase: MockServerUseCase
 ) : ViewModel() {
+
     private val _isConnected = MutableStateFlow<Boolean?>(null)
     val isConnected: StateFlow<Boolean?> get() = _isConnected
 
@@ -51,7 +52,7 @@ class MainActivityViewModel @Inject constructor(
 
     fun syncFavoritePosts() {
         viewModelScope.launch {
-            postUseCase.syncFavoritePosts()
+            mockServerUseCase.syncFavoritePosts()
         }
     }
 }

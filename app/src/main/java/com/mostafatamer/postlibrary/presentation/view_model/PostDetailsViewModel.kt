@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mostafatamer.postlibrary.domain.model.CommentsList
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.state.DataState
+import com.mostafatamer.postlibrary.domain.use_case.MockServerUseCase
 import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
 import com.mostafatamer.postlibrary.presentation.view_model.abstraction.PreSaveable
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostDetailsViewModel @Inject constructor(
     private val postUseCase: PostUseCase,
+    private val mockServerUseCase: MockServerUseCase
 ) : ViewModel(), PreSaveable {
 
     private val _comments = MutableStateFlow<DataState<CommentsList>>(DataState.Loading)
@@ -49,7 +51,7 @@ class PostDetailsViewModel @Inject constructor(
             handleOnPostIsRetrieved(
                 onError = { _isFavorite.value = false }
             ) { post ->
-                val isFavoriteState = postUseCase.isFavoritePost(post)
+                val isFavoriteState = mockServerUseCase.isFavoritePost(post)
 
                 if (isFavoriteState is DataState.Success) {
                     _isFavorite.value = isFavoriteState.data
@@ -83,7 +85,7 @@ class PostDetailsViewModel @Inject constructor(
     private fun addPostToFavorite() {
         viewModelScope.launch {
             handleOnPostIsRetrieved {
-                postUseCase.addToFavoritePost(it)
+                mockServerUseCase.addToFavoritePost(it)
                 _isFavorite.value = true
             }
         }
@@ -92,7 +94,7 @@ class PostDetailsViewModel @Inject constructor(
     private fun removePostFromFavorite() {
         viewModelScope.launch {
             handleOnPostIsRetrieved {
-                val result = postUseCase.removeFromFavoritePost(it)
+                val result = mockServerUseCase.removeFromFavoritePost(it)
                 if (result is DataState.Success) {
                     _isFavorite.value = false
                 }
@@ -113,5 +115,4 @@ class PostDetailsViewModel @Inject constructor(
             _post.value = postUseCase.getPostById(postId)
         }
     }
-
 }

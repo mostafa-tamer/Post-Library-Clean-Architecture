@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
-import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
+import com.mostafatamer.postlibrary.domain.use_case.MockServerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoritePostViewModel @Inject constructor(
-    private val postUseCase: PostUseCase,
+    private val mockServerUseCase: MockServerUseCase
 ) : ViewModel() {
 
     var isRefreshing by mutableStateOf(false)
@@ -26,7 +26,7 @@ class FavoritePostViewModel @Inject constructor(
 
     fun loadFavoritePosts() {
         viewModelScope.launch {
-            val result = postUseCase.loadFavoritePosts()
+            val result = mockServerUseCase.loadFavoritePosts()
             loadDataCondition(result, _favoritePosts)
             isRefreshing = false
         }
