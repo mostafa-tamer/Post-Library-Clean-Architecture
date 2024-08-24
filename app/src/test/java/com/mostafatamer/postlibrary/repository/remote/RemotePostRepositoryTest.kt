@@ -56,7 +56,7 @@ class RemotePostRepositoryTest {
 
     @Test
     fun test_getPosts_when_successful_request() = runTest {
-        val mockPosts = com.mostafatamer.postlibrary.PostsResponse
+        val mockPosts = PostsResponse
 
         coEvery { postApiService.getPosts() } returns Response.success(mockPosts)
 

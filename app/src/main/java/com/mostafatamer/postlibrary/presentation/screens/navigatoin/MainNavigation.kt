@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.mostafatamer.postlibrary.MainActivityViewModel
+import com.mostafatamer.postlibrary.activity.view_model.MainActivityViewModel
 import com.mostafatamer.postlibrary.presentation.screens.PostDetailsScreen
 import com.mostafatamer.postlibrary.presentation.view_model.PostDetailsViewModel
 import kotlinx.serialization.Serializable

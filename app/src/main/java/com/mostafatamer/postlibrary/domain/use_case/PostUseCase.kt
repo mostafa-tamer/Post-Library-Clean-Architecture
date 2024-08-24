@@ -51,7 +51,7 @@ class PostUseCase @Inject constructor(
         return mockRemotePostRepository.isFavoritePost(post)
     }
 
-    suspend fun addToFavoritePost(post: Post)  {
+    suspend fun addToFavoritePost(post: Post) {
         val result = mockRemotePostRepository.savePostToFavorites(post)
 
         if (result is DataState.Error) {
@@ -80,7 +80,7 @@ class PostUseCase @Inject constructor(
     suspend fun loadFavoritePosts(): DataState<PostList> =
         mockRemotePostRepository.loadFavoritePosts()
 
-    suspend fun syncFavoritePosts() {
+    suspend fun syncFavoritePosts(): DataState<PostList> {
         val favoritePostsToBeSynced = favoritePostToSyncRepository.getAll()
             .first()
             .map { it.toPost() }
@@ -90,5 +90,7 @@ class PostUseCase @Inject constructor(
         if (responseState is DataState.Success) {
             favoritePostToSyncRepository.deleteAll()
         }
+
+        return responseState
     }
 }

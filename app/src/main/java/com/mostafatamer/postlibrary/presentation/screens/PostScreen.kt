@@ -19,10 +19,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mostafatamer.postlibrary.MainActivity
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.state.DataState
 import com.mostafatamer.postlibrary.presentation.components.CenterContentInLazyItem

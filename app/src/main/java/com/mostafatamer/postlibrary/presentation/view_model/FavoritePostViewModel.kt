@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
 import com.mostafatamer.postlibrary.domain.use_case.PostUseCase
-import com.mostafatamer.postlibrary.loadDataCondition
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

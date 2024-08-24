@@ -1,41 +1,35 @@
 package com.mostafatamer.postlibrary
 
-import com.mostafatamer.postlibrary.domain.state.DataState
-import kotlinx.coroutines.flow.MutableStateFlow
-import retrofit2.Response
-import java.net.InetSocketAddress
-import java.net.Socket
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import androidx.core.app.NotificationCompat
+import com.mostafatamer.postlibrary.activity.MainActivity
 
-fun hasInternetAccess(): Boolean {
-    return try {
-        val socket = Socket()
-        socket.connect(InetSocketAddress("8.8.8.8", 53), 1500)  // Google's DNS
-        socket.close()
-        true
-    } catch (e: Exception) {
-        false
-    }
-}
+fun Context.pushNotification(title: String?, message: String?) {
+    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+    val intent = Intent(this, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(
+        this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 
-fun <T> loadDataCondition(
-    newResult: DataState<T>, oldResult: MutableStateFlow<DataState<T>>,
-) {
-    if (newResult !is DataState.Error || oldResult.value is DataState.Loading) {
-        oldResult.value = newResult
-    }
-}
+    val notificationBuilder = NotificationCompat.Builder(this, "default_channel_id")
+        .setSmallIcon(R.drawable.app_icon)
+        .setContentTitle(title)
+        .setContentText(message)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setContentIntent(pendingIntent)
 
-fun <T, R> handleApiResponse(
-    response: Response<T>,
-    transform: (T) -> R,
-): DataState<R> {
-    return if (response.isSuccessful) {
-        val body = response.body() ?: return DataState.Empty
+    val channel = NotificationChannel(
+        "default_channel_id",
+        "Default Channel",
+        NotificationManager.IMPORTANCE_HIGH
+    )
 
-        return if (body is List<*> && body.isEmpty()) DataState.Empty
-        else DataState.Success(transform(body))
-    } else {
-        DataState.Error(Throwable(DataState.Error.unSuccessfulResponseErrorMessage(response.code())))
-    }
+    notificationManager.createNotificationChannel(channel)
+
+    notificationManager.notify(0, notificationBuilder.build())
 }

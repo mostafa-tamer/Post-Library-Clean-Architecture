@@ -42,7 +42,7 @@ class LocalPostRepositoryTest {
         commentDao = database.commentDao()
         favoriteDao = database.favoritePostDao()
 
-        localPostRepository = LocalPostRepository(postDao, commentDao, favoriteDao)
+        localPostRepository = LocalPostRepository(postDao, commentDao)
     }
 
     @After
@@ -121,28 +121,6 @@ class LocalPostRepositoryTest {
         assertEquals(listOf(Comments[0], Comments[1]), (savedComments as DataState.Success).data)
     }
 
-    @Test
-    fun test_addToFavoritePost() = runTest {
-        localPostRepository.savePosts(Posts)
-
-        localPostRepository.addToFavoritePost(1)
-
-        val result = localPostRepository.isFavoritePost(1).first()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun test_removeFromFavoritePost() = runTest {
-        localPostRepository.savePosts(Posts)
-        val post = Posts[0]
-
-        favoriteDao.addToFavorites(FavoritePostEntity(post.id))
-        localPostRepository.removeFromFavoritePost(1)
-
-        val result = localPostRepository.isFavoritePost(1).first()
-        assertTrue(!result)
-    }
 
     @Test
     fun test_getPostById_when_post_exists() = runTest {
@@ -162,25 +140,5 @@ class LocalPostRepositoryTest {
         val result = localPostRepository.getPostById(1)
 
         assertTrue(result is DataState.Empty)
-    }
-
-    @Test
-    fun test_getFavoritePosts_when_no_favorite_posts_exist() = runTest {
-        val result = localPostRepository.getFavoritePosts()
-        assertTrue(result is DataState.Empty)
-    }
-
-    @Test
-    fun test_getFavoritePosts_when_favorite_posts_exist() = runTest {
-        localPostRepository.savePosts(Posts)
-
-        Posts.forEach {
-            favoriteDao.addToFavorites(FavoritePostEntity(it.id))
-        }
-
-        val result = localPostRepository.getFavoritePosts()
-
-        assertTrue(result is DataState.Success)
-        assertEquals((result as DataState.Success).data.size, Posts.size)
     }
 }

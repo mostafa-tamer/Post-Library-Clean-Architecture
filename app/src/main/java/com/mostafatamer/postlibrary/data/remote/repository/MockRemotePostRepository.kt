@@ -3,12 +3,12 @@ package com.mostafatamer.postlibrary.data.remote.repository
 import com.google.gson.Gson
 import com.mostafatamer.postlibrary.data.local.dao.FavoritePostDao
 import com.mostafatamer.postlibrary.data.local.entity.FavoritePostEntity
+import com.mostafatamer.postlibrary.data.remote.handleApiResponse
+import com.mostafatamer.postlibrary.data.remote.hasInternetAccess
 import com.mostafatamer.postlibrary.data.remote.service.MockPostApiService
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.model.PostList
 import com.mostafatamer.postlibrary.domain.state.DataState
-import com.mostafatamer.postlibrary.handleApiResponse
-import com.mostafatamer.postlibrary.hasInternetAccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -143,6 +143,6 @@ class MockRemotePostRepository @Inject constructor(
 
         mockWebServer.enqueue(mockResponse)
 
-        delay(150)  //delay simulation
+        delay(350)  //delay simulation
     }
 }

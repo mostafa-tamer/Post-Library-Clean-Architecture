@@ -26,13 +26,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.mostafatamer.postlibrary.MainActivity
 import com.mostafatamer.postlibrary.R
 import com.mostafatamer.postlibrary.domain.model.Comment
 import com.mostafatamer.postlibrary.domain.model.CommentsList

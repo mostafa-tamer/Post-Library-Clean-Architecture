@@ -17,6 +17,9 @@ interface FavoritePostToSyncDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favoritePost: FavoritePostToSyncEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(favoritePost: List<FavoritePostToSyncEntity>)
+
     @Query("DELETE FROM favorite_posts_to_sync")
     suspend fun deleteAll()
 

@@ -50,7 +50,15 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+            )
+        )
     }
+
+
 }
 
 dependencies {
@@ -65,13 +73,19 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.runner)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.work.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // worker manager
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
+
+
     //swipe refresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.28.0")
-
 
     //retrofit
     implementation(libs.retrofit)
@@ -101,13 +115,24 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
     testImplementation("io.mockk:mockk:1.13.2")
+    androidTestImplementation("io.mockk:mockk:1.13.2") 
+    androidTestImplementation("io.mockk:mockk-android:1.13.4")
+
     testImplementation("org.mockito:mockito-core:4.8.0")
+    androidTestImplementation("org.mockito:mockito-core:4.8.0")
+
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+
     testImplementation("androidx.arch.core:core-testing:2.1.0")
+
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
 }

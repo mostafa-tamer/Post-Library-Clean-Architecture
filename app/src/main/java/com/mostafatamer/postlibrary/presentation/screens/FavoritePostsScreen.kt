@@ -23,9 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.mostafatamer.postlibrary.MainActivity
 import com.mostafatamer.postlibrary.domain.model.Post
 import com.mostafatamer.postlibrary.domain.state.DataState
 import com.mostafatamer.postlibrary.presentation.components.CenterContentInLazyItem
@@ -64,6 +62,7 @@ fun FavoritePostsScreen(viewModel: FavoritePostViewModel, isConnected: State<Boo
             val favoritePosts by viewModel.favoritePosts.collectAsState()
 
             LazyColumn(
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
