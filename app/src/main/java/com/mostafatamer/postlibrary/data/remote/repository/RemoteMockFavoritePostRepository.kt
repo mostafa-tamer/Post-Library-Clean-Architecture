@@ -1,8 +1,7 @@
 package com.mostafatamer.postlibrary.data.remote.repository
 
 import com.google.gson.Gson
-import com.mostafatamer.postlibrary.data.local.dao.FavoritePostDao
-import com.mostafatamer.postlibrary.data.local.entity.FavoritePostEntity
+import com.mostafatamer.postlibrary.data.local.dao.MockServerFavoritePostDao
 import com.mostafatamer.postlibrary.data.remote.handleApiResponse
 import com.mostafatamer.postlibrary.data.remote.hasInternetAccess
 import com.mostafatamer.postlibrary.data.remote.service.MockPostApiService
@@ -19,8 +18,8 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Named
 
-class MockRemotePostRepository @Inject constructor(
-    private val favoriteDao: FavoritePostDao,
+class RemoteMockFavoritePostRepository @Inject constructor(
+    private val mockServerFavoritePostDao: MockServerFavoritePostDao,
     private val mockWebServer: MockWebServer,
     @Named("mockWebServerRetrofit")
     private val mockWebServerRetrofit: Lazy<Retrofit>,
@@ -35,7 +34,7 @@ class MockRemotePostRepository @Inject constructor(
             if (!hasInternetAccess())
                 return@withContext DataState.Error(Throwable(DataState.Error.noInternetErrorMessage()))
 
-            favoriteDao.addToFavorites(FavoritePostEntity(post.id))
+            mockServerFavoritePostDao.addToFavorites(post.toMockServerPostEntity())
 
             val postDtoBody = post.toPostDto()
 
@@ -57,7 +56,7 @@ class MockRemotePostRepository @Inject constructor(
             if (!hasInternetAccess())
                 return@withContext DataState.Error(Throwable(DataState.Error.noInternetErrorMessage()))
 
-            val isFavoritePost = favoriteDao.isFavorite(post.id)
+            val isFavoritePost = mockServerFavoritePostDao.isFavorite(post.id)
 
             val jsonResponse = jsonConverter.toJson(isFavoritePost.first())
 
@@ -78,7 +77,7 @@ class MockRemotePostRepository @Inject constructor(
             if (!hasInternetAccess())
                 return@withContext DataState.Error(Throwable(DataState.Error.noInternetErrorMessage()))
 
-            favoriteDao.removeFromFavorites(FavoritePostEntity(post.id))
+            mockServerFavoritePostDao.removeFromFavorites(post.toMockServerPostEntity())
 
             val postDtoBody = post.toPostDto()
 
@@ -94,15 +93,15 @@ class MockRemotePostRepository @Inject constructor(
         }
     }
 
-    suspend fun  savePostsToFavorites(post: List<Post>): DataState<PostList> =
+    suspend fun savePostsToFavorites(post: List<Post>): DataState<PostList> =
         withContext(Dispatchers.IO) {
             try {
                 if (!hasInternetAccess())
                     return@withContext DataState.Error(Throwable(DataState.Error.noInternetErrorMessage()))
 
-                val favoritePostsEntity = post.map { FavoritePostEntity(it.id) }
+                val favoritePostsEntity = post.map { it.toMockServerPostEntity() }
 
-                favoriteDao.addToFavorites(favoritePostsEntity)
+                mockServerFavoritePostDao.addToFavorites(favoritePostsEntity)
 
                 val favoritePostsDto = post.map { it.toPostDto() }
 
@@ -124,7 +123,7 @@ class MockRemotePostRepository @Inject constructor(
             if (!hasInternetAccess())
                 return@withContext DataState.Error(Throwable(DataState.Error.noInternetErrorMessage()))
 
-            val jsonResponse = jsonConverter.toJson(favoriteDao.getAllFavoritePosts())
+            val jsonResponse = jsonConverter.toJson(mockServerFavoritePostDao.getAllFavoritePosts())
 
             triggerMockRequest(jsonResponse)
 

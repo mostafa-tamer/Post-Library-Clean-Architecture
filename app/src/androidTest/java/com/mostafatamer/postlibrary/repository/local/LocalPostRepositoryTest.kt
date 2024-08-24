@@ -7,13 +7,11 @@ import com.mostafatamer.postlibrary.Comments
 import com.mostafatamer.postlibrary.Posts
 import com.mostafatamer.postlibrary.data.local.AppDatabase
 import com.mostafatamer.postlibrary.data.local.dao.CommentDao
-import com.mostafatamer.postlibrary.data.local.dao.FavoritePostDao
+import com.mostafatamer.postlibrary.data.local.dao.MockServerFavoritePostDao
 import com.mostafatamer.postlibrary.data.local.dao.PostDao
-import com.mostafatamer.postlibrary.data.local.entity.FavoritePostEntity
 import com.mostafatamer.postlibrary.data.local.entity.PostEntity
 import com.mostafatamer.postlibrary.data.local.repositoty.LocalPostRepository
 import com.mostafatamer.postlibrary.domain.state.DataState
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -28,7 +26,7 @@ class LocalPostRepositoryTest {
     private lateinit var database: AppDatabase
     private lateinit var postDao: PostDao
     private lateinit var commentDao: CommentDao
-    private lateinit var favoriteDao: FavoritePostDao
+    private lateinit var favoriteDao: MockServerFavoritePostDao
     private lateinit var localPostRepository: LocalPostRepository
 
     @Before

@@ -36,7 +36,6 @@ import com.mostafatamer.postlibrary.presentation.view_model.FavoritePostViewMode
 @Composable
 fun FavoritePostsScreen(viewModel: FavoritePostViewModel, isConnected: State<Boolean?>) {
 
-
     LaunchedEffect(isConnected.value) {
         viewModel.loadFavoritePosts()
     }

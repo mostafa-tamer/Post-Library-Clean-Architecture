@@ -34,7 +34,7 @@ import com.mostafatamer.postlibrary.presentation.view_model.PostViewModel
 fun PostScreen(
     navHostController: NavHostController,
     viewModel: PostViewModel,
-    isConnected: State<Boolean?>
+    isConnected: State<Boolean?>,
 ) {
     LaunchedEffect(isConnected.value) {
         viewModel.loadPosts()

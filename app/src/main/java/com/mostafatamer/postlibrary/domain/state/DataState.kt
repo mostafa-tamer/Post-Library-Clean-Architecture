@@ -16,6 +16,4 @@ sealed class DataState<out T> {
     }
 
     data object Empty : DataState<Nothing>()
-
-
 }

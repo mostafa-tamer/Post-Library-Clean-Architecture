@@ -6,7 +6,7 @@ import com.mostafatamer.postlibrary.domain.model.PostEntityList
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class FavoritePostToSyncRepository @Inject constructor(
+class LocalFavoritePostToSyncRepository @Inject constructor(
     private val favoritePostToSyncDao: FavoritePostToSyncDao,
 ) {
     suspend fun insert(favoritePost: FavoritePostToSyncEntity) {

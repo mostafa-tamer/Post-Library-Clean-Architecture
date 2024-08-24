@@ -28,7 +28,6 @@ class PostViewModel @Inject constructor(
         }
     }
 
-
     override fun getPreSavedData() {
         viewModelScope.launch {
             _posts.value = postUseCase.getSavedPosts()

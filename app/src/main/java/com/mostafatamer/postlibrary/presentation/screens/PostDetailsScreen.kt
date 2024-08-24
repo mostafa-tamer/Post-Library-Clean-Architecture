@@ -46,12 +46,11 @@ import com.mostafatamer.postlibrary.ui.theme.Favorite
 fun PostDetailsScreen(
     navController: NavHostController,
     viewModel: PostDetailsViewModel,
-    isConnected: State<Boolean?>
+    isConnected: State<Boolean?>,
 ) {
 
     LaunchedEffect(viewModel.postId, isConnected.value) {
         viewModel.loadComments()
-
         viewModel.getPost()
         viewModel.checkIfFavoritePost()
     }
@@ -94,7 +93,7 @@ fun PostDetailsScreen(
                 .padding(top = it.calculateTopPadding())
         ) {
             Header(viewModel)
-            Comments(viewModel, navController)
+            Comments(viewModel)
         }
     }
 }
@@ -136,10 +135,7 @@ private fun Post(viewModel: PostDetailsViewModel) {
 }
 
 @Composable
-private fun Comments(
-    viewModel: PostDetailsViewModel,
-    navController: NavHostController,
-) {
+private fun Comments(viewModel: PostDetailsViewModel, ) {
     val postsState by viewModel.comments.collectAsState()
     Card(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)) {
         LazyColumn(Modifier.fillMaxSize()) {

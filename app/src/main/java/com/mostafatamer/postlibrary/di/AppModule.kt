@@ -45,7 +45,6 @@ object AppModule {
     fun providePostApiService(@Named("retrofit") retrofit: Retrofit): PostApiService =
         retrofit.create(PostApiService::class.java)
 
-
     @Provides
     @Singleton
     fun providePostDao(database: AppDatabase) = database.postDao()
@@ -78,7 +77,6 @@ object AppModule {
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
-
 
     @Provides
     @Singleton

@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * this acts like a buffer to sync the favorite posts to the server
+ * ِActs like a buffer to sync the favorite posts to the server
  */
 @Entity(
     tableName = "favorite_posts_to_sync",

@@ -26,5 +26,5 @@ interface PostDao {
     suspend fun deletePostById(id: Int)
 
     @Delete
-    suspend  fun deletePosts(oldPosts: MutableList<PostEntity>)
+    suspend fun deletePosts(oldPosts: MutableList<PostEntity>)
 }

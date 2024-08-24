@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val connectivityManager: ConnectivityManager,
-      val postUseCase: PostUseCase,
+    private val postUseCase: PostUseCase,
 ) : ViewModel() {
     private val _isConnected = MutableStateFlow<Boolean?>(null)
     val isConnected: StateFlow<Boolean?> get() = _isConnected

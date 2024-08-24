@@ -1,9 +1,9 @@
 package com.mostafatamer.postlibrary.domain.use_case
 
 import com.mostafatamer.postlibrary.data.local.entity.FavoritePostToSyncEntity
-import com.mostafatamer.postlibrary.data.local.repositoty.FavoritePostToSyncRepository
+import com.mostafatamer.postlibrary.data.local.repositoty.LocalFavoritePostToSyncRepository
 import com.mostafatamer.postlibrary.data.local.repositoty.LocalPostRepository
-import com.mostafatamer.postlibrary.data.remote.repository.MockRemotePostRepository
+import com.mostafatamer.postlibrary.data.remote.repository.RemoteMockFavoritePostRepository
 import com.mostafatamer.postlibrary.data.remote.repository.RemotePostRepository
 import com.mostafatamer.postlibrary.domain.model.CommentsList
 import com.mostafatamer.postlibrary.domain.model.Post
@@ -15,8 +15,8 @@ import javax.inject.Inject
 class PostUseCase @Inject constructor(
     private val remotePostRepository: RemotePostRepository,
     private val localPostRepository: LocalPostRepository,
-    private val favoritePostToSyncRepository: FavoritePostToSyncRepository,
-    private val mockRemotePostRepository: MockRemotePostRepository,
+    private val localFavoritePostToSyncRepository: LocalFavoritePostToSyncRepository,
+    private val remoteMockFavoritePostRepository: RemoteMockFavoritePostRepository,
 ) {
     suspend fun getPosts(): DataState<PostList> {
         val posts = remotePostRepository.getPosts()
@@ -48,22 +48,21 @@ class PostUseCase @Inject constructor(
     }
 
     suspend fun isFavoritePost(post: Post): DataState<Boolean> {
-        return mockRemotePostRepository.isFavoritePost(post)
+        return remoteMockFavoritePostRepository.isFavoritePost(post)
     }
 
     suspend fun addToFavoritePost(post: Post) {
-        val result = mockRemotePostRepository.savePostToFavorites(post)
+        val result = remoteMockFavoritePostRepository.savePostToFavorites(post)
 
         if (result is DataState.Error) {
-            favoritePostToSyncRepository.insert(
+            localFavoritePostToSyncRepository.insert(
                 FavoritePostToSyncEntity(post.id)
             )
         }
-
     }
 
     suspend fun removeFromFavoritePost(post: Post): DataState<Post> {
-        val result = mockRemotePostRepository.removePostFromFavorites(post)
+        val result = remoteMockFavoritePostRepository.removePostFromFavorites(post)
 
         return result
     }
@@ -78,17 +77,18 @@ class PostUseCase @Inject constructor(
     }
 
     suspend fun loadFavoritePosts(): DataState<PostList> =
-        mockRemotePostRepository.loadFavoritePosts()
+        remoteMockFavoritePostRepository.loadFavoritePosts()
 
     suspend fun syncFavoritePosts(): DataState<PostList> {
-        val favoritePostsToBeSynced = favoritePostToSyncRepository.getAll()
+        val favoritePostsToBeSynced = localFavoritePostToSyncRepository.getAll()
             .first()
             .map { it.toPost() }
 
-        val responseState = mockRemotePostRepository.savePostsToFavorites(favoritePostsToBeSynced)
+        val responseState =
+            remoteMockFavoritePostRepository.savePostsToFavorites(favoritePostsToBeSynced)
 
         if (responseState is DataState.Success) {
-            favoritePostToSyncRepository.deleteAll()
+            localFavoritePostToSyncRepository.deleteAll()
         }
 
         return responseState

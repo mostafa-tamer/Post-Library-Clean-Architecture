@@ -17,9 +17,10 @@ class SyncManager(private val context: Context) {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val periodicSyncRequest = PeriodicWorkRequestBuilder<SyncWorker>(repeatingInterval, timeUnit)
-            .setConstraints(constraints)
-            .build()
+        val periodicSyncRequest =
+            PeriodicWorkRequestBuilder<SyncWorker>(repeatingInterval, timeUnit)
+                .setConstraints(constraints)
+                .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "SyncFavoritesWorker",

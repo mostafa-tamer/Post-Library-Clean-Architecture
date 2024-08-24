@@ -10,7 +10,7 @@ data class PostEntity(
     val userId: Int,
     val title: String,
     val body: String,
-){
+) {
     fun toPost(): Post {
         return Post(
             id = id,

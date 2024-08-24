@@ -36,7 +36,6 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainActivityViewModel>()
 
-
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
@@ -44,7 +43,6 @@ class MainActivity : ComponentActivity() {
                     .show()
             }
         }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

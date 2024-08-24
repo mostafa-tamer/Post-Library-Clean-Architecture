@@ -16,5 +16,4 @@ interface PostApiService {
     @GET("/posts/{post_id}/comments")
     suspend fun getComments(@Path("post_id") postId: Int): Response<CommentsDtoList>
 
-    suspend fun getFavoritePosts(): Response<PostDtoList>
 }
