@@ -5,7 +5,7 @@
 ![Use Case Diagram](https://github.com/user-attachments/assets/613c03d1-9e3a-40c7-a161-acfdf93f9ecd)
 
 
-![class diagram](https://github.com/user-attachments/assets/e3d14de7-a5ca-47a2-b7b9-2ed1e844d99f)
+![class diagram](https://github.com/user-attachments/assets/2325e3da-df89-4e39-bba8-d0ea23da09c3)
 
 
 ![Database Erd](https://github.com/user-attachments/assets/c50a573a-e0e7-4076-a622-a297a9ef7954)
