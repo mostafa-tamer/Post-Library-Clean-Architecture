@@ -48,21 +48,16 @@ class PostDetailsViewModel @Inject constructor(
 
     fun checkIfFavoritePost() {
         viewModelScope.launch {
-            handleOnPostIsRetrieved(
+            onPostRetrieved(
                 onError = { _isFavorite.value = false }
             ) { post ->
-                val isFavoriteState = mockServerUseCase.isFavoritePost(post)
-
-                if (isFavoriteState is DataState.Success) {
-                    _isFavorite.value = isFavoriteState.data
-                } else {
-                    _isFavorite.value = false
-                }
+                val isFavoritePost = mockServerUseCase.isFavoritePost(post)
+                _isFavorite.value = isFavoritePost
             }
         }
     }
 
-    private suspend fun handleOnPostIsRetrieved(
+    private suspend fun onPostRetrieved(
         onError: () -> Unit = {},
         onRetrieved: suspend (Post) -> Unit,
     ) {
@@ -84,7 +79,7 @@ class PostDetailsViewModel @Inject constructor(
 
     private fun addPostToFavorite() {
         viewModelScope.launch {
-            handleOnPostIsRetrieved {
+            onPostRetrieved {
                 mockServerUseCase.addToFavoritePost(it)
                 _isFavorite.value = true
             }
@@ -93,7 +88,7 @@ class PostDetailsViewModel @Inject constructor(
 
     private fun removePostFromFavorite() {
         viewModelScope.launch {
-            handleOnPostIsRetrieved {
+            onPostRetrieved {
                 val result = mockServerUseCase.removeFromFavoritePost(it)
                 if (result is DataState.Success) {
                     _isFavorite.value = false

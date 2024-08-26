@@ -14,26 +14,21 @@ class MockServerUseCase @Inject constructor(
     private val remoteMockFavoritePostRepository: RemoteMockFavoritePostRepository,
 ) {
 
-    suspend fun isFavoritePost(post: Post): DataState<Boolean> {
-        return remoteMockFavoritePostRepository.isFavoritePost(post)
+    suspend fun isFavoritePost(post: Post): Boolean {
+        val result = remoteMockFavoritePostRepository.isFavoritePost(post)
+        return if (result is DataState.Success) result.data else false
     }
 
     suspend fun addToFavoritePost(post: Post) {
         val result = remoteMockFavoritePostRepository.savePostToFavorites(post)
 
-        if (result is DataState.Error) {
-            localFavoritePostToSyncRepository.insert(
-                FavoritePostToSyncEntity(post.id)
-            )
-        }
+        if (result is DataState.Error)
+            localFavoritePostToSyncRepository.insert(FavoritePostToSyncEntity(post.id))
     }
 
     suspend fun removeFromFavoritePost(post: Post): DataState<Post> {
-        val result = remoteMockFavoritePostRepository.removePostFromFavorites(post)
-
-        return result
+        return remoteMockFavoritePostRepository.removePostFromFavorites(post)
     }
-
 
     suspend fun loadFavoritePosts(): DataState<PostList> =
         remoteMockFavoritePostRepository.loadFavoritePosts()

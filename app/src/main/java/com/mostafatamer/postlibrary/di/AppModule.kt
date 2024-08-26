@@ -13,7 +13,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.mockwebserver.MockWebServer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -26,7 +25,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    @Named("retrofit")
     fun provideRetrofitInstance(
         baseUrl: String,
         gsonConverterFactory: GsonConverterFactory,
@@ -42,7 +40,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePostApiService(@Named("retrofit") retrofit: Retrofit): PostApiService =
+    fun providePostApiService(retrofit: Retrofit): PostApiService =
         retrofit.create(PostApiService::class.java)
 
     @Provides
@@ -64,19 +62,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
-
-    @Provides
-    @Singleton
-    @Named("mockWebServerRetrofit")
-    fun provideMockRetrofitInstance(
-        mockWebServer: MockWebServer,
-        gsonConverterFactory: GsonConverterFactory,
-    ): Lazy<Retrofit> = lazy {
-        Retrofit.Builder()
-            .baseUrl(mockWebServer.url("/"))
-            .addConverterFactory(gsonConverterFactory)
-            .build()
-    }
 
     @Provides
     @Singleton
